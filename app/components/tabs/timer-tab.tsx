@@ -35,7 +35,7 @@ export function TimerTab({
   onResetTimer,
   onSetSelection,
 }: TimerTabProps) {
-  const [selectedSkillId, setSelectedSkillId] = useState<string>('');
+  const [selectedSkillId, setSelectedSkillId] = useState<string>('none');
   const [selectedAttributeIds, setSelectedAttributeIds] = useState<string[]>([]);
   const [lastSession, setLastSession] = useState<Session | null>(null);
   const [showSummary, setShowSummary] = useState(false);
@@ -43,7 +43,7 @@ export function TimerTab({
   // Update timer selection when local state changes
   useEffect(() => {
     onSetSelection(
-      selectedSkillId || undefined,
+      selectedSkillId && selectedSkillId !== 'none' ? selectedSkillId : undefined,
       selectedAttributeIds.length > 0 ? selectedAttributeIds : attributes.map(a => a.id)
     );
   }, [selectedSkillId, selectedAttributeIds, onSetSelection, attributes]);
@@ -55,7 +55,7 @@ export function TimerTab({
         // Default to all attributes if none selected
         const allAttrIds = attributes.map(a => a.id);
         setSelectedAttributeIds(allAttrIds);
-        onSetSelection(selectedSkillId || undefined, allAttrIds);
+        onSetSelection(selectedSkillId && selectedSkillId !== 'none' ? selectedSkillId : undefined, allAttrIds);
       }
     }
     onStartTimer();
@@ -162,7 +162,7 @@ export function TimerTab({
                   <SelectValue placeholder="Choose a skill to train..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No specific skill</SelectItem>
+                  <SelectItem value="none">No specific skill</SelectItem>
                   {skills.map(skill => (
                     <SelectItem key={skill.id} value={skill.id}>
                       {skill.name} ({skill.totalHours.toFixed(1)}h)
@@ -218,7 +218,7 @@ export function TimerTab({
           <CardContent>
             <SessionStats
               timerState={timerState}
-              selectedSkill={skills.find(s => s.id === selectedSkillId)}
+              selectedSkill={selectedSkillId && selectedSkillId !== 'none' ? skills.find(s => s.id === selectedSkillId) : undefined}
               selectedAttributes={attributes.filter(a => selectedAttributeIds.includes(a.id))}
             />
           </CardContent>
@@ -246,7 +246,7 @@ export function TimerTab({
         open={showSummary}
         onClose={() => setShowSummary(false)}
         session={lastSession}
-        skill={selectedSkillId ? skills.find(s => s.id === selectedSkillId) : undefined}
+        skill={selectedSkillId && selectedSkillId !== 'none' ? skills.find(s => s.id === selectedSkillId) : undefined}
         attributes={attributes.filter(a => selectedAttributeIds.includes(a.id))}
       />
     </div>

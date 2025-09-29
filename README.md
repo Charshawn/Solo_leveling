@@ -222,3 +222,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Ready to level up your productivity? Start your first Pomodoro session now! 🚀**
+
+
